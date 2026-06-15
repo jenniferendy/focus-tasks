@@ -1,1 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Focus — Priority Task Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --purple-50: #EEEDFE; --purple-200: #AFA9EC; --purple-400: #7F77DD; --purple-600: #534AB7; --purple-800: #3C3489;
+    --coral-50: #FAECE7; --coral-400: #D85A30; --coral-600: #993C1D; --coral-800: #712B13;
+    --teal-50: #E1F5EE; --teal-400: #1D9E75; --teal-600: #0F6E56;
+    --amber-50: #FAEEDA; --amber-400: #EF9F27; --amber-600: #854F0B; --amber-800: #633806;
+    --red-50: #FCEBEB; --red-400: #E24B4A; --red-600: #A32D2D;
+    --gray-50: #F1EFE8; --gray-200: #B4B2A9; --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #444441;
+    --bg: #F7F6F3;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.1);
+    --border-md: rgba(0,0,0,0.18);
+    --text-primary: #1a1a18;
+    --text-secondary: #5F5E5A;
+    --text-muted: #888780;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Layout */
+  .layout { display: flex; height: 100vh; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 0; overflow-y: auto; }
+  .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
+  .logo-mark { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 34px; height: 34px; background: var(--purple-400); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+  .logo-text { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.3px; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .nav { padding: 12px 10px; flex: 1; }
+  .nav-section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); padding: 8px 10px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--radius-sm); font-size: 13.5px; color: var(--text-secondary); cursor: pointer; transition: all 0.12s; margin-bottom: 1px; border: none; background: none; width: 100%; text-align: left; font-family: var(--font-body); }
+  .nav-item:hover { background: var(--bg); color: var(--text-primary); }
+  .nav-item.active { background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
+  .nav-item i { font-size: 17px; }
+  .nav-badge { margin-left: auto; font-size: 11px; background: var(--red-50); color: var(--red-600); border-radius: 20px; padding: 1px 7px; font-weight: 500; }
+  .nav-badge.purple { background: var(--purple-50); color: var(--purple-600); }
+
+  /* Integrations in sidebar */
+  .sidebar-integrations { padding: 16px; border-top: 1px solid var(--border); }
+  .int-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; }
+  .int-pill { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-secondary); padding: 5px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 5px; cursor: pointer; background: none; width: 100%; font-family: var(--font-body); }
+  .int-pill:hover { background: var(--bg); border-color: var(--border-md); }
+  .int-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .dot-gmail { background: var(--coral-400); }
+  .dot-cal { background: var(--teal-400); }
+  .dot-slack { background: var(--purple-400); }
+  .int-pill-name { flex: 1; }
+  .int-pill-status { font-size: 10px; color: var(--teal-600); font-weight: 500; }
+
+  /* Main content */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { padding: 14px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface); flex-shrink: 0; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .topbar-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-primary); }
+  .topbar-desc { font-size: 12px; color: var(--text-muted); }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 13px; border-radius: var(--radius-sm); border: 1px solid var(--border-md); cursor: pointer; background: var(--surface); color: var(--text-primary); font-family: var(--font-body); font-weight: 400; transition: all 0.12s; }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--purple-400); color: white; border-color: var(--purple-400); font-weight: 500; }
+  .btn-primary:hover { background: var(--purple-600); border-color: var(--purple-600); }
+  .btn i { font-size: 15px; }
+
+  /* Matrix */
+  .matrix-wrap { flex: 1; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
+  .matrix-axis { display: grid; grid-template-columns: 1fr 1fr; }
+  .axis-label { font-size: 11px; color: var(--text-muted); text-align: center; padding: 8px 0 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+  .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px; flex: 1; background: var(--border); overflow: hidden; }
+  .quadrant { background: var(--surface); padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; min-height: 0; }
+  .q-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-shrink: 0; }
+  .q-title { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; font-family: var(--font-display); }
+  .q-subtitle { font-size: 11px; color: var(--text-muted); font-weight: 400; font-family: var(--font-body); }
+  .q-count { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .q1 .q-title { color: var(--red-600); } .q1 .q-count { background: var(--red-50); color: var(--red-600); }
+  .q2 .q-title { color: var(--purple-600); } .q2 .q-count { background: var(--purple-50); color: var(--purple-600); }
+  .q3 .q-title { color: var(--amber-600); } .q3 .q-count { background: var(--amber-50); color: var(--amber-600); }
+  .q4 .q-title { color: var(--gray-600); } .q4 .q-count { background: var(--gray-50); color: var(--gray-600); }
+
+  /* Task cards */
+  .task-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; background: var(--surface); cursor: default; transition: border-color 0.12s, box-shadow 0.12s; flex-shrink: 0; }
+  .task-card:hover { border-color: var(--border-md); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .task-card.done { opacity: 0.45; }
+  .task-top { display: flex; align-items: flex-start; gap: 9px; }
+  .task-check { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--border-md); flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; }
+  .task-check:hover { border-color: var(--teal-400); }
+  .task-check.checked { background: var(--teal-400); border-color: var(--teal-400); }
+  .task-check.checked::after { content: '✓'; color: white; font-size: 9px; font-weight: 700; }
+  .task-name { font-size: 13px; color: var(--text-primary); line-height: 1.45; flex: 1; }
+  .task-done-name { text-decoration: line-through; color: var(--text-muted); }
+  .task-meta { display: flex; align-items: center; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+  .task-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .tag-gmail { background: var(--coral-50); color: var(--coral-600); }
+  .tag-calendar { background: var(--teal-50); color: var(--teal-600); }
+  .tag-slack { background: var(--purple-50); color: var(--purple-600); }
+  .tag-manual { background: var(--gray-50); color: var(--gray-600); }
+  .tag-reminder { background: var(--amber-50); color: var(--amber-600); }
+  .task-due { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 3px; }
+  .task-due.overdue { color: var(--red-600); font-weight: 500; }
+  .task-actions { display: flex; gap: 4px; margin-left: auto; opacity: 0; transition: opacity 0.12s; }
+  .task-card:hover .task-actions { opacity: 1; }
+  .task-action-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px; border-radius: 4px; font-size: 14px; display: flex; align-items: center; }
+  .task-action-btn:hover { color: var(--text-primary); background: var(--bg); }
+
+  .add-task-btn { width: 100%; border: 1px dashed var(--border-md); border-radius: var(--radius-md); padding: 7px; font-size: 12px; color: var(--text-muted); cursor: pointer; background: transparent; font-family: var(--font-body); display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.12s; flex-shrink: 0; }
+  .add-task-btn:hover { border-color: var(--purple-400); color: var(--purple-600); background: var(--purple-50); }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-primary); color: white; padding: 10px 20px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); z-index: 100; pointer-events: none; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px; backdrop-filter: blur(2px); }
+  .modal { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; width: 420px; max-width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text-primary); }
+  .close-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 20px; display: flex; align-items: center; border-radius: 4px; padding: 2px; }
+  .close-btn:hover { color: var(--text-primary); background: var(--bg); }
+  .field { margin-bottom: 16px; }
+  .field label { font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 5px; font-weight: 500; }
+  .field input, .field select, .field textarea { width: 100%; padding: 8px 11px; font-size: 13.5px; border: 1px solid var(--border-md); border-radius: var(--radius-sm); background: var(--bg); color: var(--text-primary); font-family: var(--font-body); outline: none; transition: border-color 0.12s; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px var(--purple-50); }
+  .field textarea { resize: none; height: 64px; line-height: 1.5; }
+  .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .q-opt { padding: 9px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; text-align: center; color: var(--text-secondary); transition: all 0.12s; line-height: 1.3; }
+  .q-opt:hover { background: var(--bg); border-color: var(--border-md); }
+  .q-opt.sel-1 { border-color: var(--red-400); background: var(--red-50); color: var(--red-600); font-weight: 500; }
+  .q-opt.sel-2 { border-color: var(--purple-400); background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
+  .q-opt.sel-3 { border-color: var(--amber-400); background: var(--amber-50); color: var(--amber-600); font-weight: 500; }
+  .q-opt.sel-4 { border-color: var(--gray-400); background: var(--gray-50); color: var(--gray-600); font-weight: 500; }
+  .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+  /* Integration panel */
+  .int-panel { position: fixed; right: 0; top: 0; bottom: 0; width: 340px; background: var(--surface); border-left: 1px solid var(--border); padding: 24px; overflow-y: auto; z-index: 40; box-shadow: -4px 0 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 20px; }
+  .int-panel-header { display: flex; justify-content: space-between; align-items: center; }
+  .int-panel-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; }
+  .ai-banner { background: var(--purple-50); border: 1px solid var(--purple-200); border-radius: var(--radius-md); padding: 12px 14px; }
+  .ai-banner-title { font-size: 12px; font-weight: 600; color: var(--purple-800); display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .ai-banner-body { font-size: 12px; color: var(--purple-600); line-height: 1.55; }
+  .int-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .int-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 8px; }
+  .int-card-top { display: flex; align-items: center; gap: 10px; }
+  .int-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .icon-gmail { background: var(--coral-50); color: var(--coral-400); }
+  .icon-cal { background: var(--teal-50); color: var(--teal-400); }
+  .icon-slack { background: var(--purple-50); color: var(--purple-400); }
+  .icon-notion { background: var(--gray-50); color: var(--gray-600); }
+  .int-card-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .int-card-status { font-size: 11px; color: var(--teal-600); font-weight: 500; }
+  .int-card-status.disconnected { color: var(--text-muted); }
+  .int-card-body { font-size: 12px; color: var(--text-secondary); margin-top: 9px; line-height: 1.55; border-top: 1px solid var(--border); padding-top: 9px; }
+  .int-card-body ul { padding-left: 16px; }
+  .int-card-body li { margin-bottom: 3px; }
+  .connect-btn { margin-top: 10px; width: 100%; }
+
+  /* Empty state */
+  .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; gap: 6px; opacity: 0.5; }
+  .empty i { font-size: 22px; color: var(--text-muted); }
+  .empty-text { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 4px; }
+
+  @media (max-width: 768px) {
+    .sidebar { width: 200px; }
+    .int-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="logo-text">Focus</div>
+          <div class="logo-sub">Priority task manager</div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="setView('matrix', this)">
+        <i class="ti ti-layout-grid"></i> Priority matrix
+        <span class="nav-badge purple" id="total-count">0</span>
+      </button>
+      <button class="nav-item" onclick="setView('today', this)">
+        <i class="ti ti-sun"></i> Today
+        <span class="nav-badge" id="today-count">0</span>
+      </button>
+      <button class="nav-item" onclick="setView('all', this)">
+        <i class="ti ti-list"></i> All tasks
+      </button>
+      <div class="nav-section-label" style="margin-top:8px">Integrations</div>
+      <button class="nav-item" onclick="openIntPanel()">
+        <i class="ti ti-plug"></i> Manage apps
+      </button>
+    </nav>
+    <div class="sidebar-integrations">
+      <div class="int-label">Connected</div>
+      <button class="int-pill" onclick="openIntPanel()">
+        <div class="int-dot dot-gmail"></div>
+        <span class="int-pill-name">Gmail</span>
+        <span class="int-pill-status">Live</span>
+      </button>
+      <button class="int-pill" onclick="openIntPanel()">
+        <div class="int-dot dot-cal"></div>
+        <span class="int-pill-name">Google Calendar</span>
+        <span class="int-pill-status">Live</span>
+      </button>
+      <button class="int-pill" onclick="openIntPanel()">
+        <div class="int-dot dot-slack"></div>
+        <span class="int-pill-name">Slack</span>
+        <span class="int-pill-status">Live</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="topbar-title" id="view-title">Priority matrix</div>
+          <div class="topbar-desc" id="view-desc">Organize by urgency and importance</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn" onclick="showToast('Syncing your apps...')"><i class="ti ti-refresh"></i> Sync</button>
+        <button class="btn btn-primary" onclick="openAddModal()"><i class="ti ti-plus"></i> Add task</button>
+      </div>
+    </div>
+
+    <div class="matrix-wrap" id="content-wrap">
+      <div class="matrix-axis">
+        <div class="axis-label">Urgent</div>
+        <div class="axis-label">Not urgent</div>
+      </div>
+      <div class="matrix">
+        <div class="quadrant q1" id="q1">
+          <div class="q-header">
+            <div><div class="q-title"><i class="ti ti-flame"></i> Do now</div><div class="q-subtitle">Urgent + important</div></div>
+            <span class="q-count" id="q1-count">0</span>
+          </div>
+        </div>
+        <div class="quadrant q2" id="q2">
+          <div class="q-header">
+            <div><div class="q-title"><i class="ti ti-star"></i> Schedule</div><div class="q-subtitle">Not urgent + important</div></div>
+            <span class="q-count" id="q2-count">0</span>
+          </div>
+        </div>
+        <div class="quadrant q3" id="q3">
+          <div class="q-header">
+            <div><div class="q-title"><i class="ti ti-clock"></i> Delegate</div><div class="q-subtitle">Urgent + not important</div></div>
+            <span class="q-count" id="q3-count">0</span>
+          </div>
+        </div>
+        <div class="quadrant q4" id="q4">
+          <div class="q-header">
+            <div><div class="q-title"><i class="ti ti-archive"></i> Eliminate</div><div class="q-subtitle">Not urgent + not important</div></div>
+            <span class="q-count" id="q4-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'focus_tasks_v1';
+const DEFAULT_TASKS = [
+  { id:1, name:"Reply to client contract email", q:1, source:"gmail", due:"Today", done:false },
+  { id:2, name:"Prepare Q3 review presentation", q:2, source:"manual", due:"Fri Jun 20", done:false },
+  { id:3, name:"Team standup prep — agenda notes", q:1, source:"slack", due:"Today 9am", done:false },
+  { id:4, name:"Schedule dentist appointment", q:4, source:"manual", due:null, done:false },
+  { id:5, name:"Review PR from dev team", q:2, source:"slack", due:"Thu Jun 19", done:false },
+  { id:6, name:"Book travel for July conference", q:2, source:"calendar", due:"Jun 22", done:false },
+  { id:7, name:"Respond to non-urgent Slack DMs", q:3, source:"slack", due:null, done:false },
+  { id:8, name:"Update LinkedIn profile", q:4, source:"manual", due:null, done:false },
+  { id:9, name:"Send invoice to Acme Corp", q:1, source:"gmail", due:"Today", done:false },
+  { id:10, name:"Block focus time next week", q:2, source:"calendar", due:"Jun 16", done:false },
+  { id:11, name:"Slack reminder: follow up with Sarah re: budget", q:1, source:"slack", due:"Today", done:false, isReminder:true },
+  { id:12, name:"Slack reminder: review onboarding doc", q:2, source:"slack", due:"Jun 18", done:false, isReminder:true },
+];
+
+function loadTasks(){ try { const s = localStorage.getItem(STORAGE_KEY); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_TASKS)); } catch(e){ return JSON.parse(JSON.stringify(DEFAULT_TASKS)); } }
+function saveTasks(){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); } catch(e){} }
+
+let tasks = loadTasks();
+let nextId = tasks.reduce((m,t)=>Math.max(m,t.id),0)+1;
+let currentView = 'matrix';
+let selectedQ = 1;
+
+function tagClass(src, isReminder){ if(isReminder) return 'task-tag tag-reminder'; return 'task-tag tag-'+src; }
+function tagLabel(src, isReminder){ if(isReminder) return '⏰ Slack reminder'; return {gmail:'Gmail',calendar:'Calendar',slack:'Slack',manual:'Manual'}[src]||src; }
+
+function renderTasks(){
+  if(currentView==='matrix') renderMatrix();
+  else if(currentView==='today') renderList(tasks.filter(t=>t.due&&t.due.toLowerCase().includes('today')&&!t.done), 'Today\'s tasks');
+  else renderList(tasks, 'All tasks');
+  updateCounts();
+  saveTasks();
+}
+
+function renderMatrix(){
+  const wrap = document.getElementById('content-wrap');
+  wrap.innerHTML = `
+    <div class="matrix-axis">
+      <div class="axis-label">Urgent</div>
+      <div class="axis-label">Not urgent</div>
+    </div>
+    <div class="matrix">
+      <div class="quadrant q1" id="q1"><div class="q-header"><div><div class="q-title"><i class="ti ti-flame"></i> Do now</div><div class="q-subtitle">Urgent + important</div></div><span class="q-count" id="q1-count">0</span></div></div>
+      <div class="quadrant q2" id="q2"><div class="q-header"><div><div class="q-title"><i class="ti ti-star"></i> Schedule</div><div class="q-subtitle">Not urgent + important</div></div><span class="q-count" id="q2-count">0</span></div></div>
+      <div class="quadrant q3" id="q3"><div class="q-header"><div><div class="q-title"><i class="ti ti-clock"></i> Delegate</div><div class="q-subtitle">Urgent + not important</div></div><span class="q-count" id="q3-count">0</span></div></div>
+      <div class="quadrant q4" id="q4"><div class="q-header"><div><div class="q-title"><i class="ti ti-archive"></i> Eliminate</div><div class="q-subtitle">Not urgent + not important</div></div><span class="q-count" id="q4-count">0</span></div></div>
+    </div>`;
+  [1,2,3,4].forEach(n=>{
+    const el = document.getElementById('q'+n);
+    const list = tasks.filter(t=>t.q===n);
+    list.forEach(t=>{ const c = buildCard(t); el.appendChild(c); });
+    if(list.filter(t=>!t.done).length===0&&list.length===0){
+      const emp = document.createElement('div'); emp.className='empty';
+      emp.innerHTML=`<i class="ti ti-check"></i><div class="empty-text">Nothing here</div>`; el.appendChild(emp);
+    }
+    const ab = document.createElement('button'); ab.className='add-task-btn';
+    ab.innerHTML=`<i class="ti ti-plus"></i> Add task`;
+    ab.onclick=()=>{ selectedQ=n; openAddModal(); }; el.appendChild(ab);
+    document.getElementById('q'+n+'-count').textContent=list.filter(t=>!t.done).length;
+  });
+}
+
+function renderList(list, title){
+  const wrap = document.getElementById('content-wrap');
+  wrap.innerHTML=`<div style="padding:20px 24px;overflow-y:auto;flex:1"><div style="display:flex;flex-direction:column;gap:8px;max-width:680px" id="task-list"></div></div>`;
+  const tl = document.getElementById('task-list');
+  if(list.length===0){ tl.innerHTML=`<div style="color:var(--text-muted);font-size:14px;padding:40px 0;text-align:center">No tasks here yet</div>`; return; }
+  list.forEach(t=>{ tl.appendChild(buildCard(t)); });
+}
+
+function buildCard(t){
+  const card = document.createElement('div');
+  card.className='task-card'+(t.done?' done':'');
+  card.dataset.id=t.id;
+  const dueClass = t.due&&t.due.toLowerCase().includes('today')?'task-due overdue':'task-due';
+  card.innerHTML=`
+    <div class="task-top">
+      <div class="task-check${t.done?' checked':''}" onclick="toggleDone(${t.id})" title="Mark complete"></div>
+      <div class="task-name${t.done?' task-done-name':''}">${escHtml(t.name)}</div>
+      <div class="task-actions">
+        <button class="task-action-btn" onclick="deleteTask(${t.id})" title="Delete"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+    <div class="task-meta">
+      <span class="${tagClass(t.source,t.isReminder)}">${tagLabel(t.source,t.isReminder)}</span>
+      ${t.due?`<span class="${dueClass}"><i class="ti ti-calendar" style="font-size:11px"></i>${escHtml(t.due)}</span>`:''}
+    </div>`;
+  return card;
+}
+
+function escHtml(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+function toggleDone(id){
+  const t=tasks.find(t=>t.id===id); if(!t) return;
+  t.done=!t.done;
+  showToast(t.done?'Task marked complete ✓':'Task reopened');
+  renderTasks();
+}
+
+function deleteTask(id){
+  tasks=tasks.filter(t=>t.id!==id);
+  showToast('Task deleted');
+  renderTasks();
+}
+
+function updateCounts(){
+  const active=tasks.filter(t=>!t.done);
+  const todayTasks=tasks.filter(t=>t.due&&t.due.toLowerCase().includes('today')&&!t.done);
+  const tc=document.getElementById('total-count'); if(tc) tc.textContent=active.length;
+  const tod=document.getElementById('today-count'); if(tod) tod.textContent=todayTasks.length;
+}
+
+function openAddModal(){
+  closeModal();
+  const overlay=document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+  const qLabels=[['1','🔥 Do now','Urgent + important'],['2','⭐ Schedule','Not urgent + important'],['3','🕐 Delegate','Urgent + not important'],['4','📦 Eliminate','Not urgent + not important']];
+  overlay.innerHTML=`<div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New task</div>
+      <button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="field"><label>Task name</label><input id="nt-name" type="text" placeholder="What needs to be done?" autocomplete="off"/></div>
+    <div class="field"><label>Priority</label>
+      <div class="q-grid">${qLabels.map(([v,l,s])=>`<div class="q-opt${selectedQ==v?' sel-'+v:''}" id="qopt-${v}" onclick="selQ(${v})" style="cursor:pointer"><div style="font-size:12px;font-weight:600">${l}</div><div style="font-size:10px;color:inherit;opacity:0.75;margin-top:2px">${s}</div></div>`).join('')}</div>
+    </div>
+    <div class="field"><label>Source</label>
+      <select id="nt-src"><option value="manual">Manual</option><option value="gmail">Gmail</option><option value="calendar">Calendar</option><option value="slack">Slack</option></select>
+    </div>
+    <div class="field"><label>Due date (optional)</label><input id="nt-due" type="text" placeholder="e.g. Today, Jun 20, Next Monday"/></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="addTask()">Add task</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>{ const i=document.getElementById('nt-name'); if(i) i.focus(); },50);
+  document.addEventListener('keydown', handleModalKey);
+}
+
+function handleModalKey(e){ if(e.key==='Escape') closeModal(); if(e.key==='Enter'&&e.target.id==='nt-name') addTask(); }
+function closeModal(){ const m=document.getElementById('modal-overlay'); if(m) m.remove(); document.removeEventListener('keydown',handleModalKey); }
+
+function selQ(n){
+  selectedQ=n;
+  [1,2,3,4].forEach(i=>{ const el=document.getElementById('qopt-'+i); if(el){ el.className='q-opt'+(i===n?' sel-'+n:''); } });
+}
+
+function addTask(){
+  const name=(document.getElementById('nt-name')||{}).value?.trim();
+  if(!name){ const i=document.getElementById('nt-name'); if(i){ i.style.borderColor='var(--red-400)'; i.focus(); } return; }
+  const src=(document.getElementById('nt-src')||{}).value||'manual';
+  const due=(document.getElementById('nt-due')||{}).value?.trim()||null;
+  tasks.push({ id:nextId++, name, q:selectedQ, source:src, due, done:false });
+  closeModal();
+  showToast('Task added ✓');
+  renderTasks();
+}
+
+function openIntPanel(){
+  closeIntPanel();
+  const panel=document.createElement('div'); panel.className='int-panel'; panel.id='int-panel';
+  panel.innerHTML=`
+    <div class="int-panel-header">
+      <div class="int-panel-title">Integrations</div>
+      <button class="close-btn" onclick="closeIntPanel()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="ai-banner">
+      <div class="ai-banner-title"><i class="ti ti-sparkles"></i> Smart sync</div>
+      <div class="ai-banner-body">Connect your apps and tasks flow in automatically — Gmail action items, calendar prep work, Slack reminders, and @mentions — all sorted into the right quadrant.</div>
+    </div>
+    <div>
+      <div class="int-section-title"><div class="int-dot dot-gmail" style="width:7px;height:7px;border-radius:50%;background:var(--coral-400);flex-shrink:0"></div> Gmail</div>
+      <div class="int-card">
+        <div class="int-card-top"><div class="int-icon icon-gmail"><i class="ti ti-mail"></i></div><div><div class="int-card-name">Gmail</div><div class="int-card-status">● Connected</div></div></div>
+        <div class="int-card-body">Pulls in:<ul><li>Flagged or starred emails</li><li>Threads with action words (reply needed, deadline, please review)</li><li>Emails with due dates detected</li></ul></div>
+      </div>
+    </div>
+    <div>
+      <div class="int-section-title"><div class="int-dot dot-cal" style="width:7px;height:7px;border-radius:50%;background:var(--teal-400);flex-shrink:0"></div> Google Calendar</div>
+      <div class="int-card">
+        <div class="int-card-top"><div class="int-icon icon-cal"><i class="ti ti-calendar"></i></div><div><div class="int-card-name">Google Calendar</div><div class="int-card-status">● Connected</div></div></div>
+        <div class="int-card-body">Pulls in:<ul><li>Meetings in the next 24h → Q1 prep tasks</li><li>Upcoming events needing prep → Q2</li><li>Overdue calendar tasks → Q1</li></ul></div>
+      </div>
+    </div>
+    <div>
+      <div class="int-section-title"><div class="int-dot dot-slack" style="width:7px;height:7px;border-radius:50%;background:var(--purple-400);flex-shrink:0"></div> Slack</div>
+      <div class="int-card">
+        <div class="int-card-top"><div class="int-icon icon-slack"><i class="ti ti-brand-slack"></i></div><div><div class="int-card-name">Slack</div><div class="int-card-status">● Connected</div></div></div>
+        <div class="int-card-body">Pulls in:<ul><li><strong>Remind me later</strong> — due today/overdue → Q1, upcoming → Q2, no date → Inbox</li><li>Bookmarked messages</li><li>Unread @mentions</li></ul></div>
+      </div>
+    </div>
+    <div>
+      <div class="int-section-title" style="color:var(--text-muted)">Available to connect</div>
+      <div class="int-card">
+        <div class="int-card-top"><div class="int-icon icon-notion"><i class="ti ti-brand-notion"></i></div><div><div class="int-card-name">Notion</div><div class="int-card-status disconnected">Not connected</div></div></div>
+        <button class="btn btn-primary connect-btn" onclick="showToast('Notion connection coming soon!')">Connect</button>
+      </div>
+      <div class="int-card">
+        <div class="int-card-top"><div class="int-icon icon-notion"><i class="ti ti-chart-bar"></i></div><div><div class="int-card-name">Wrike</div><div class="int-card-status disconnected">Not connected</div></div></div>
+        <button class="btn btn-primary connect-btn" onclick="showToast('Wrike connection coming soon!')">Connect</button>
+      </div>
+    </div>`;
+  document.body.appendChild(panel);
+}
+
+function closeIntPanel(){ const p=document.getElementById('int-panel'); if(p) p.remove(); }
+
+function setView(view, el){
+  currentView=view;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles={ matrix:['Priority matrix','Organize by urgency and importance'], today:["Today's tasks",'Due or scheduled for today'], all:['All tasks','Every task across all quadrants'] };
+  const [t,d]=titles[view]||['Tasks',''];
+  document.getElementById('view-title').textContent=t;
+  document.getElementById('view-desc').textContent=d;
+  renderTasks();
+}
+
+let toastTimer;
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2500); }
+
+renderTasks();
+</script>
+</body>
+</html>
