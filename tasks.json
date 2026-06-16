@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-06-15T21:00:00Z",
+  "last_synced": "2026-06-15T22:00:00Z",
   "tasks": [
     { "id": 13, "name": "Review GitHub security sign-in alert", "q": 1, "source": "gmail", "due": "Today", "done": false, "isReminder": false },
     { "id": 14, "name": "Prep: 2026 Project/Priorities list review", "q": 1, "source": "calendar", "due": "Jun 16", "done": false, "isReminder": false },
@@ -31,6 +31,7 @@
     { "id": 40, "name": "Prep: Fawad / Jen - 1:1", "q": 2, "source": "calendar", "due": "Jun 19", "done": false, "isReminder": false },
     { "id": 41, "name": "Prep: Claudia / Jen - 1:1", "q": 2, "source": "calendar", "due": "Jun 22", "done": false, "isReminder": false },
     { "id": 42, "name": "Review Zoe's pending tasks and cover while on vacation (Jun 16-17)", "q": 1, "source": "slack", "due": "Jun 16", "done": false, "isReminder": false },
-    { "id": 43, "name": "Follow up with Jason re: HET carrier rates for S&S at Belleville", "q": 2, "source": "slack", "due": null, "done": false, "isReminder": false }
+    { "id": 43, "name": "Follow up with Jason re: HET carrier rates for S&S at Belleville", "q": 2, "source": "slack", "due": null, "done": false, "isReminder": false },
+    { "id": 44, "name": "Connect with Alain Leblanc on Teams re: Endy Mattress Spot Check", "q": 2, "source": "gmail", "due": null, "done": false, "isReminder": false, "created_at": "2026-06-15", "escalation_flag": false, "escalation_note": "" }
   ]
 }
