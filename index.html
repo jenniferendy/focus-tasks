@@ -475,6 +475,7 @@ function renderTracker() {
       <table class="tracker-table">
         <thead><tr>
           ${th('name','Task')}
+          ${th('owner','Owner')}
           ${th('details','Details')}
           ${th('urgency','Urgency')}
           ${th('notes','Notes')}
@@ -498,6 +499,7 @@ function buildTrackerRow(ti) {
   const dueClass = ti.due&&ti.due.toLowerCase().includes('today')?'due-cell overdue':'due-cell';
   tr.innerHTML = `
     <td><div class="task-name-cell"><div class="row-source-dot" style="background:${srcColor}" title="${ti.source}"></div><div class="task-name-text editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'name',this.innerText)">${esc(ti.name)}</div></div></td>
+    <td><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'owner',this.innerText)">${esc(ti.owner||'')}</div></td>
     <td class="details-cell"><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'details',this.innerText)" placeholder="Add details…">${esc(ti.details||'')}</div></td>
     <td><div class="urgency-dropdown" onclick="cycleUrgency(${ti.tid})"><span class="urgency-pill ${urgClass}" style="cursor:pointer" title="Click to change">${urgLabel||'<span style=\'color:var(--text-muted);font-size:11px\'>Set urgency</span>'}</span></div></td>
     <td class="notes-cell"><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'notes',this.innerText)">${esc(ti.notes||'')}</div></td>
@@ -539,6 +541,7 @@ function openTrackerModal(item) {
   overlay.innerHTML=`<div class="modal">
     <div class="modal-header"><div class="modal-title">${editing?'Edit item':'New tracker item'}</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
     <div class="field"><label>Task</label><input id="ti-name" type="text" placeholder="What needs to be done?" value="${esc(item?.name||'')}" autocomplete="off"/></div>
+    <div class="field"><label>Owner <span class="field-optional">optional</span></label><input id="ti-owner" type="text" placeholder="e.g. Jen, Fawad…" value="${esc(item?.owner||'')}"/></div>
     <div class="field"><label>Details</label><textarea id="ti-details" placeholder="Add context, background, or description…">${esc(item?.details||'')}</textarea></div>
     <div class="field-row">
       <div class="field"><label>Urgency <span class="field-optional">optional</span></label><select id="ti-urg">${urgOpts}</select></div>
@@ -556,14 +559,15 @@ function saveTrackerModal(tid) {
   const name=(document.getElementById('ti-name')||{}).value?.trim();
   if (!name) { const i=document.getElementById('ti-name'); if(i){i.style.borderColor='var(--red-400)';i.focus();} return; }
   const details=(document.getElementById('ti-details')||{}).value?.trim()||'';
+  const owner=(document.getElementById('ti-owner')||{}).value?.trim()||'';
   const urgency=(document.getElementById('ti-urg')||{}).value||'';
   const due=(document.getElementById('ti-due')||{}).value?.trim()||'';
   const notes=(document.getElementById('ti-notes')||{}).value?.trim()||'';
   if (tid) {
     const ti=trackerItems.find(t=>t.tid===tid);
-    if(ti){ Object.assign(ti,{name,details,urgency,due,notes}); }
+    if(ti){ Object.assign(ti,{name,details,owner,urgency,due,notes}); }
   } else {
-    trackerItems.push({ tid:nextTid++, taskId:null, name, details, urgency, due, notes, source:'manual', autoImported:false });
+    trackerItems.push({ tid:nextTid++, taskId:null, name, details, owner, urgency, due, notes, source:'manual', autoImported:false });
   }
   saveTrackerItems(); closeModal(); showToast(tid?'Item updated ✓':'Item added ✓'); renderTasks();
 }
@@ -593,7 +597,7 @@ function addTask() {
   const task={ id:nextId++, name, q:selectedQ, source:src, due, done:false, isReminder:false };
   tasks.push(task); saveManualTask(task);
   // also add to tracker
-  trackerItems.push({ tid:nextTid++, taskId:task.id, name, details:'', urgency:Q_TO_URG[selectedQ]||'', notes:'', due:due||'', source:src, autoImported:true });
+  trackerItems.push({ tid:nextTid++, taskId:task.id, name, details:'', owner:'', urgency:Q_TO_URG[selectedQ]||'', notes:'', due:due||'', source:src, autoImported:true });
   saveTrackerItems();
   closeModal(); showToast('Task added ✓'); renderTasks();
 }
