@@ -1,18 +1,6 @@
 {
   "last_synced": "2026-06-15T21:00:00Z",
   "tasks": [
-    { "id": 1, "name": "Reply to client contract email", "q": 1, "source": "gmail", "due": "Today", "done": false, "isReminder": false },
-    { "id": 2, "name": "Prepare Q3 review presentation", "q": 2, "source": "manual", "due": "Fri Jun 20", "done": false, "isReminder": false },
-    { "id": 3, "name": "Team standup prep — agenda notes", "q": 1, "source": "slack", "due": "Today 9am", "done": false, "isReminder": false },
-    { "id": 4, "name": "Schedule dentist appointment", "q": 4, "source": "manual", "due": null, "done": false, "isReminder": false },
-    { "id": 5, "name": "Review PR from dev team", "q": 2, "source": "slack", "due": "Thu Jun 19", "done": false, "isReminder": false },
-    { "id": 6, "name": "Book travel for July conference", "q": 2, "source": "calendar", "due": "Jun 22", "done": false, "isReminder": false },
-    { "id": 7, "name": "Respond to non-urgent Slack DMs", "q": 3, "source": "slack", "due": null, "done": false, "isReminder": false },
-    { "id": 8, "name": "Update LinkedIn profile", "q": 4, "source": "manual", "due": null, "done": false, "isReminder": false },
-    { "id": 9, "name": "Send invoice to Acme Corp", "q": 1, "source": "gmail", "due": "Today", "done": false, "isReminder": false },
-    { "id": 10, "name": "Block focus time next week", "q": 2, "source": "calendar", "due": "Jun 16", "done": false, "isReminder": false },
-    { "id": 11, "name": "Slack reminder: follow up with Sarah re: budget", "q": 1, "source": "slack", "due": "Today", "done": false, "isReminder": true },
-    { "id": 12, "name": "Slack reminder: review onboarding doc", "q": 2, "source": "slack", "due": "Jun 18", "done": false, "isReminder": true },
     { "id": 13, "name": "Review GitHub security sign-in alert", "q": 1, "source": "gmail", "due": "Today", "done": false, "isReminder": false },
     { "id": 14, "name": "Prep: 2026 Project/Priorities list review", "q": 1, "source": "calendar", "due": "Jun 16", "done": false, "isReminder": false },
     { "id": 15, "name": "Prep: Jason / Jen - GGD Onboard Planning", "q": 1, "source": "calendar", "due": "Jun 16", "done": false, "isReminder": false },
