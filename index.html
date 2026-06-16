@@ -16,7 +16,7 @@
     --teal-50:#E1F5EE;--teal-400:#1D9E75;--teal-600:#0F6E56;
     --amber-50:#FAEEDA;--amber-400:#EF9F27;--amber-600:#854F0B;
     --red-50:#FCEBEB;--red-400:#E24B4A;--red-600:#A32D2D;
-    --gray-50:#F1EFE8;--gray-400:#888780;--gray-600:#5F5E5A;--gray-800:#444441;
+    --gray-50:#F1EFE8;--gray-200:#D4D2CB;--gray-400:#888780;--gray-600:#5F5E5A;--gray-800:#444441;
     --bg:#F7F6F3;--surface:#FFFFFF;
     --border:rgba(0,0,0,0.1);--border-md:rgba(0,0,0,0.18);
     --text-primary:#1a1a18;--text-secondary:#5F5E5A;--text-muted:#888780;
@@ -50,8 +50,7 @@
   .nav-badge.purple { background:var(--purple-50);color:var(--purple-600); }
   .sidebar-integrations { padding:16px;border-top:1px solid var(--border); }
   .int-label { font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px; }
-  .int-pill { display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-secondary);padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:5px;cursor:pointer;background:none;width:100%;font-family:var(--font-body); }
-  .int-pill:hover { background:var(--bg);border-color:var(--border-md); }
+  .int-pill { display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-secondary);padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:5px;background:none;width:100%;font-family:var(--font-body); }
   .int-dot { width:7px;height:7px;border-radius:50%;flex-shrink:0; }
   .dot-gmail { background:var(--coral-400); }
   .dot-cal { background:var(--teal-400); }
@@ -115,12 +114,59 @@
   .empty { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 10px;gap:6px;opacity:.5; }
   .empty i { font-size:22px;color:var(--text-muted); }
   .empty-text { font-size:11px;color:var(--text-muted);text-align:center; }
-
-  /* No tasks.json banner */
   .setup-banner { margin:24px;padding:20px 24px;background:var(--amber-50);border:1px solid rgba(239,159,39,0.3);border-radius:var(--radius-lg); }
   .setup-banner-title { font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--amber-600);margin-bottom:8px;display:flex;align-items:center;gap:8px; }
   .setup-banner-body { font-size:13px;color:var(--amber-800);line-height:1.6; }
   .setup-banner code { background:rgba(0,0,0,0.06);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px; }
+
+  /* ── WORK TRACKER ─────────────────────────────────────────── */
+  .tracker-wrap { flex:1;overflow:hidden;display:flex;flex-direction:column; }
+  .tracker-toolbar { padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);flex-shrink:0;flex-wrap:wrap; }
+  .filter-group { display:flex;align-items:center;gap:6px; }
+  .filter-label { font-size:11px;color:var(--text-muted);font-weight:500;white-space:nowrap; }
+  .filter-select { padding:5px 10px;font-size:12px;border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--surface);color:var(--text-primary);font-family:var(--font-body);cursor:pointer;outline:none; }
+  .filter-select:focus { border-color:var(--purple-400); }
+  .filter-input { padding:5px 10px;font-size:12px;border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--surface);color:var(--text-primary);font-family:var(--font-body);outline:none;width:180px; }
+  .filter-input:focus { border-color:var(--purple-400); }
+  .filter-clear { font-size:12px;color:var(--purple-600);cursor:pointer;background:none;border:none;font-family:var(--font-body);padding:0 4px; }
+  .filter-clear:hover { text-decoration:underline; }
+  .tracker-scroll { flex:1;overflow-y:auto;padding:20px 24px; }
+  .tracker-table { width:100%;border-collapse:separate;border-spacing:0;font-size:13px; }
+  .tracker-table thead th { padding:8px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;background:var(--surface);position:sticky;top:0;z-index:1; }
+  .tracker-table thead th:hover { color:var(--text-primary); }
+  .tracker-table thead th .sort-icon { font-size:11px;margin-left:4px;opacity:.5; }
+  .tracker-table thead th.sorted { color:var(--purple-600); }
+  .tracker-table thead th.sorted .sort-icon { opacity:1; }
+  .tracker-row { border-bottom:1px solid var(--border);transition:background .1s; }
+  .tracker-row:hover { background:var(--bg); }
+  .tracker-row td { padding:10px 12px;vertical-align:top; }
+  .tracker-row td:first-child { font-weight:500;color:var(--text-primary); }
+  .task-name-cell { display:flex;align-items:flex-start;gap:8px; }
+  .task-name-text { flex:1;line-height:1.4; }
+  .row-source-dot { width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px; }
+  .urgency-pill { display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap; }
+  .urg-urgent { background:var(--red-50);color:var(--red-600); }
+  .urg-high { background:var(--coral-50);color:var(--coral-600); }
+  .urg-medium { background:var(--amber-50);color:var(--amber-600); }
+  .urg-low { background:var(--teal-50);color:var(--teal-600); }
+  .urg-na { background:var(--gray-50);color:var(--gray-400); }
+  .urg-none { background:transparent;color:var(--text-muted);font-weight:400; }
+  .details-cell { color:var(--text-secondary);max-width:260px;line-height:1.45; }
+  .notes-cell { color:var(--text-muted);max-width:220px;line-height:1.45;font-style:italic;font-size:12px; }
+  .due-cell { white-space:nowrap;color:var(--text-muted);font-size:12px; }
+  .due-cell.overdue { color:var(--red-600);font-weight:500; }
+  .row-actions { opacity:0;transition:opacity .12s;display:flex;gap:4px; }
+  .tracker-row:hover .row-actions { opacity:1; }
+  .row-action-btn { background:none;border:none;cursor:pointer;color:var(--text-muted);padding:3px;border-radius:4px;font-size:14px;display:flex;align-items:center; }
+  .row-action-btn:hover { color:var(--text-primary);background:var(--gray-200); }
+  .tracker-empty { text-align:center;padding:48px 20px;color:var(--text-muted); }
+  .tracker-empty i { font-size:32px;display:block;margin-bottom:12px;opacity:.4; }
+  .tracker-count { font-size:12px;color:var(--text-muted);margin-left:auto; }
+
+  /* Inline editing in tracker */
+  .editable { cursor:text;border-radius:4px;padding:1px 3px;margin:-1px -3px; }
+  .editable:hover { background:var(--bg); }
+  .editable:focus { outline:none;background:var(--purple-50);box-shadow:0 0 0 2px var(--purple-200); }
 
   /* Toast */
   .toast { position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text-primary);color:white;padding:10px 20px;border-radius:var(--radius-md);font-size:13px;font-weight:500;transition:transform .25s cubic-bezier(.34,1.56,.64,1);z-index:100;pointer-events:none;white-space:nowrap; }
@@ -128,16 +174,17 @@
 
   /* Modal */
   .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;backdrop-filter:blur(2px); }
-  .modal { background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;width:420px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.12); }
+  .modal { background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;width:460px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.12); }
   .modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:20px; }
   .modal-title { font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary); }
   .close-btn { background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:20px;display:flex;align-items:center;border-radius:4px;padding:2px; }
   .close-btn:hover { color:var(--text-primary);background:var(--bg); }
   .field { margin-bottom:16px; }
   .field label { font-size:12px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:500; }
+  .field-optional { font-size:10px;color:var(--text-muted);font-weight:400;margin-left:4px; }
   .field input,.field select,.field textarea { width:100%;padding:8px 11px;font-size:13.5px;border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--bg);color:var(--text-primary);font-family:var(--font-body);outline:none;transition:border-color .12s; }
   .field input:focus,.field select:focus,.field textarea:focus { border-color:var(--purple-400);box-shadow:0 0 0 3px var(--purple-50); }
-  .field textarea { resize:none;height:64px;line-height:1.5; }
+  .field textarea { resize:none;height:72px;line-height:1.5; }
   .q-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
   .q-opt { padding:9px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;cursor:pointer;text-align:center;color:var(--text-secondary);transition:all .12s;line-height:1.3; }
   .q-opt:hover { background:var(--bg);border-color:var(--border-md); }
@@ -146,12 +193,12 @@
   .q-opt.sel-3 { border-color:var(--amber-400);background:var(--amber-50);color:var(--amber-600);font-weight:500; }
   .q-opt.sel-4 { border-color:var(--gray-400);background:var(--gray-50);color:var(--gray-600);font-weight:500; }
   .modal-footer { display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border); }
+  .field-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
 
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:var(--border-md);border-radius:4px; }
-
-  @media (max-width:768px) { .sidebar { width:200px; } }
+  @media (max-width:768px) { .sidebar { width:200px; } .field-row { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -173,6 +220,7 @@
     <nav class="nav">
       <button class="nav-item active" onclick="setView('matrix',this)"><i class="ti ti-layout-grid"></i> Priority matrix <span class="nav-badge purple" id="total-count">0</span></button>
       <button class="nav-item" onclick="setView('today',this)"><i class="ti ti-sun"></i> Today <span class="nav-badge" id="today-count">0</span></button>
+      <button class="nav-item" onclick="setView('tracker',this)"><i class="ti ti-table"></i> Work tracker <span class="nav-badge purple" id="tracker-count">0</span></button>
       <button class="nav-item" onclick="setView('all',this)"><i class="ti ti-list"></i> All tasks</button>
       <div class="nav-section-label" style="margin-top:8px">Integrations</div>
       <button class="nav-item" onclick="showSyncHelp()"><i class="ti ti-plug"></i> Sync settings</button>
@@ -193,28 +241,38 @@
       </div>
       <div class="topbar-actions">
         <button class="btn" onclick="reloadTasks()"><i class="ti ti-refresh"></i> Refresh</button>
-        <button class="btn btn-primary" onclick="openAddModal()"><i class="ti ti-plus"></i> Add task</button>
+        <button class="btn btn-primary" id="add-btn" onclick="openAddModal()"><i class="ti ti-plus"></i> Add task</button>
       </div>
     </div>
     <div class="matrix-wrap" id="content-wrap"></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Data layer ───────────────────────────────────────────────────
-// This app reads from tasks.json in the same folder.
-// Cowork keeps tasks.json updated automatically every 2 hours.
-// Manual edits (done, delete, add) are saved back to localStorage
-// as an overlay so Cowork syncs never overwrite your changes.
-
+// ── Storage ───────────────────────────────────────────────────────
 const MANUAL_KEY = 'focus_manual_v1';
+const TRACKER_KEY = 'focus_tracker_v1';
+
+// ── Urgency mapping ───────────────────────────────────────────────
+// Matrix Q → tracker urgency
+const Q_TO_URG = { 1:'urgent', 2:'high', 3:'medium', 4:'low' };
+const URG_ORDER = { urgent:0, high:1, medium:2, low:3, na:4, '':5 };
+const URG_LABEL = { urgent:'Urgent', high:'High', medium:'Medium', low:'Low', na:'N/A', '':'' };
+const URG_CLASS = { urgent:'urg-urgent', high:'urg-high', medium:'urg-medium', low:'urg-low', na:'urg-na', '':'urg-none' };
+
 let tasks = [];
+let trackerItems = [];
 let nextId = 100;
+let nextTid = 1;
 let currentView = 'matrix';
 let selectedQ = 1;
 
+// tracker sort/filter state
+let tSort = { col:'urgency', dir:'asc' };
+let tFilter = { urgency:'', search:'' };
+
+// ── Load ──────────────────────────────────────────────────────────
 async function loadTasks() {
   try {
     const res = await fetch('tasks.json?t=' + Date.now());
@@ -224,46 +282,62 @@ async function loadTasks() {
     nextId = tasks.reduce((m,t) => Math.max(m,t.id), 0) + 1;
     applyManualOverlay();
     updateSyncStatus(data.last_synced);
-    renderTasks();
   } catch(e) {
-    // tasks.json not found or fetch blocked — show setup banner
     tasks = [];
-    renderTasks(true);
     updateSyncStatus(null, true);
   }
+  loadTrackerItems();
+  renderTasks();
+}
+
+function loadTrackerItems() {
+  try { trackerItems = JSON.parse(localStorage.getItem(TRACKER_KEY) || '[]'); } catch(e) { trackerItems = []; }
+  nextTid = trackerItems.reduce((m,t) => Math.max(m, t.tid||0), 0) + 1;
+  // auto-import tasks not already in tracker
+  tasks.forEach(t => {
+    if (!t.done && !trackerItems.find(ti => ti.taskId === t.id)) {
+      trackerItems.push({
+        tid: nextTid++,
+        taskId: t.id,
+        name: t.name,
+        details: '',
+        urgency: Q_TO_URG[t.q] || '',
+        notes: '',
+        due: t.due || '',
+        source: t.source,
+        isReminder: t.isReminder || false,
+        autoImported: true
+      });
+    }
+  });
+  saveTrackerItems();
+}
+
+function saveTrackerItems() {
+  try { localStorage.setItem(TRACKER_KEY, JSON.stringify(trackerItems)); } catch(e) {}
 }
 
 function applyManualOverlay() {
   try {
     const overlay = JSON.parse(localStorage.getItem(MANUAL_KEY) || '{}');
-    // overlay shape: { done: {id: bool}, deleted: [id], manual: [task] }
-    if (overlay.done) {
-      tasks.forEach(t => { if (overlay.done[t.id] !== undefined) t.done = overlay.done[t.id]; });
-    }
-    if (overlay.deleted) {
-      tasks = tasks.filter(t => !overlay.deleted.includes(t.id));
-    }
-    if (overlay.manual) {
-      overlay.manual.forEach(mt => { if (!tasks.find(t=>t.id===mt.id)) tasks.push(mt); });
-    }
+    if (overlay.done) tasks.forEach(t => { if (overlay.done[t.id] !== undefined) t.done = overlay.done[t.id]; });
+    if (overlay.deleted) tasks = tasks.filter(t => !overlay.deleted.includes(t.id));
+    if (overlay.manual) overlay.manual.forEach(mt => { if (!tasks.find(t=>t.id===mt.id)) tasks.push(mt); });
   } catch(e) {}
 }
 
 function saveOverlay() {
   try {
     const existing = JSON.parse(localStorage.getItem(MANUAL_KEY) || '{}');
-    const done = {};
-    tasks.forEach(t => { done[t.id] = t.done; });
-    existing.done = done;
-    localStorage.setItem(MANUAL_KEY, JSON.stringify(existing));
+    const done = {}; tasks.forEach(t => { done[t.id] = t.done; });
+    existing.done = done; localStorage.setItem(MANUAL_KEY, JSON.stringify(existing));
   } catch(e) {}
 }
 
 function saveManualTask(task) {
   try {
     const overlay = JSON.parse(localStorage.getItem(MANUAL_KEY) || '{}');
-    overlay.manual = overlay.manual || [];
-    overlay.manual.push(task);
+    overlay.manual = overlay.manual || []; overlay.manual.push(task);
     localStorage.setItem(MANUAL_KEY, JSON.stringify(overlay));
   } catch(e) {}
 }
@@ -281,206 +355,286 @@ function updateSyncStatus(lastSynced, error) {
   const statusEl = document.getElementById('sync-status');
   const labelEl = document.getElementById('sync-label-text');
   const timeEl = document.getElementById('sync-time-text');
-  if (error || !lastSynced) {
-    statusEl.className = 'sync-status never';
-    labelEl.textContent = 'Not yet synced';
-    timeEl.textContent = 'Open Cowork to run first sync';
-    return;
-  }
-  const d = new Date(lastSynced);
-  const now = new Date();
-  const minsAgo = Math.round((now - d) / 60000);
-  if (minsAgo < 5) {
-    statusEl.className = 'sync-status';
-    labelEl.textContent = 'Synced just now';
-  } else if (minsAgo < 120) {
-    statusEl.className = 'sync-status';
-    labelEl.textContent = `Synced ${minsAgo}m ago`;
-  } else {
-    statusEl.className = 'sync-status stale';
-    labelEl.textContent = 'Sync overdue';
-  }
-  timeEl.textContent = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) + ' · ' + d.toLocaleDateString([], {month:'short',day:'numeric'});
+  if (error || !lastSynced) { statusEl.className='sync-status never'; labelEl.textContent='Not yet synced'; timeEl.textContent='Open Cowork to run first sync'; return; }
+  const d = new Date(lastSynced), now = new Date();
+  const minsAgo = Math.round((now-d)/60000);
+  if (minsAgo<5) { statusEl.className='sync-status'; labelEl.textContent='Synced just now'; }
+  else if (minsAgo<120) { statusEl.className='sync-status'; labelEl.textContent=`Synced ${minsAgo}m ago`; }
+  else { statusEl.className='sync-status stale'; labelEl.textContent='Sync overdue'; }
+  timeEl.textContent = d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) + ' · ' + d.toLocaleDateString([],{month:'short',day:'numeric'});
 }
 
 function reloadTasks() { showToast('Refreshing...'); loadTasks(); }
 
-// ─── Render ───────────────────────────────────────────────────────
+// ── Render dispatcher ─────────────────────────────────────────────
 function renderTasks(showBanner) {
-  if (showBanner) { renderSetupBanner(); updateCounts(); return; }
-  if (currentView === 'matrix') renderMatrix();
-  else if (currentView === 'today') renderList(tasks.filter(t => t.due && t.due.toLowerCase().includes('today') && !t.done), "Today's tasks");
-  else renderList(tasks, 'All tasks');
+  const addBtn = document.getElementById('add-btn');
+  if (currentView === 'tracker') {
+    addBtn.innerHTML = '<i class="ti ti-plus"></i> Add item';
+    addBtn.onclick = openTrackerModal;
+    renderTracker();
+  } else {
+    addBtn.innerHTML = '<i class="ti ti-plus"></i> Add task';
+    addBtn.onclick = openAddModal;
+    if (showBanner) renderSetupBanner();
+    else if (currentView==='matrix') renderMatrix();
+    else if (currentView==='today') renderList(tasks.filter(t=>t.due&&t.due.toLowerCase().includes('today')&&!t.done),"Today's tasks");
+    else renderList(tasks,'All tasks');
+  }
   updateCounts();
 }
 
+// ── Matrix ────────────────────────────────────────────────────────
 function renderSetupBanner() {
   const wrap = document.getElementById('content-wrap');
-  wrap.innerHTML = `<div class="setup-banner">
-    <div class="setup-banner-title"><i class="ti ti-alert-triangle"></i> tasks.json not found</div>
-    <div class="setup-banner-body">
-      Your app is looking for <code>tasks.json</code> in the same folder as this file.<br><br>
-      Make sure both files are in <code>C:\\Users\\jenni\\Documents\\focus-tasks\\</code> and open this file from there.<br><br>
-      Once Cowork runs its first sync, your tasks will appear here automatically.
-    </div>
-  </div>`;
+  wrap.innerHTML = `<div class="setup-banner"><div class="setup-banner-title"><i class="ti ti-alert-triangle"></i> tasks.json not found</div><div class="setup-banner-body">Make sure both files are in <code>C:\\Users\\jenni\\Documents\\focus-tasks\\</code> and open this file from there. Once Cowork runs its first sync, your tasks will appear automatically.</div></div>`;
 }
 
 function renderMatrix() {
   const wrap = document.getElementById('content-wrap');
-  wrap.innerHTML = `
-    <div class="matrix-axis"><div class="axis-label">Urgent</div><div class="axis-label">Not urgent</div></div>
-    <div class="matrix">
-      <div class="quadrant q1" id="q1"><div class="q-header"><div><div class="q-title"><i class="ti ti-flame"></i> Do now</div><div class="q-subtitle">Urgent + important</div></div><span class="q-count" id="q1-count">0</span></div></div>
-      <div class="quadrant q2" id="q2"><div class="q-header"><div><div class="q-title"><i class="ti ti-star"></i> Schedule</div><div class="q-subtitle">Not urgent + important</div></div><span class="q-count" id="q2-count">0</span></div></div>
-      <div class="quadrant q3" id="q3"><div class="q-header"><div><div class="q-title"><i class="ti ti-clock"></i> Delegate</div><div class="q-subtitle">Urgent + not important</div></div><span class="q-count" id="q3-count">0</span></div></div>
-      <div class="quadrant q4" id="q4"><div class="q-header"><div><div class="q-title"><i class="ti ti-archive"></i> Eliminate</div><div class="q-subtitle">Not urgent + not important</div></div><span class="q-count" id="q4-count">0</span></div></div>
-    </div>`;
+  wrap.innerHTML = `<div class="matrix-axis"><div class="axis-label">Urgent</div><div class="axis-label">Not urgent</div></div><div class="matrix"><div class="quadrant q1" id="q1"><div class="q-header"><div><div class="q-title"><i class="ti ti-flame"></i> Do now</div><div class="q-subtitle">Urgent + important</div></div><span class="q-count" id="q1-count">0</span></div></div><div class="quadrant q2" id="q2"><div class="q-header"><div><div class="q-title"><i class="ti ti-star"></i> Schedule</div><div class="q-subtitle">Not urgent + important</div></div><span class="q-count" id="q2-count">0</span></div></div><div class="quadrant q3" id="q3"><div class="q-header"><div><div class="q-title"><i class="ti ti-clock"></i> Delegate</div><div class="q-subtitle">Urgent + not important</div></div><span class="q-count" id="q3-count">0</span></div></div><div class="quadrant q4" id="q4"><div class="q-header"><div><div class="q-title"><i class="ti ti-archive"></i> Eliminate</div><div class="q-subtitle">Not urgent + not important</div></div><span class="q-count" id="q4-count">0</span></div></div></div>`;
   [1,2,3,4].forEach(n => {
     const el = document.getElementById('q'+n);
-    const list = tasks.filter(t => t.q === n);
-    if (list.length === 0) {
-      const emp = document.createElement('div'); emp.className = 'empty';
-      emp.innerHTML = `<i class="ti ti-check"></i><div class="empty-text">Nothing here</div>`; el.appendChild(emp);
-    } else { list.forEach(t => el.appendChild(buildCard(t))); }
-    const ab = document.createElement('button'); ab.className = 'add-task-btn';
-    ab.innerHTML = `<i class="ti ti-plus"></i> Add task`;
-    ab.onclick = () => { selectedQ = n; openAddModal(); }; el.appendChild(ab);
-    document.getElementById('q'+n+'-count').textContent = list.filter(t=>!t.done).length;
+    const list = tasks.filter(t=>t.q===n);
+    if (!list.length) { const emp=document.createElement('div'); emp.className='empty'; emp.innerHTML=`<i class="ti ti-check"></i><div class="empty-text">Nothing here</div>`; el.appendChild(emp); }
+    else list.forEach(t=>el.appendChild(buildCard(t)));
+    const ab=document.createElement('button'); ab.className='add-task-btn'; ab.innerHTML=`<i class="ti ti-plus"></i> Add task`;
+    ab.onclick=()=>{ selectedQ=n; openAddModal(); }; el.appendChild(ab);
+    document.getElementById('q'+n+'-count').textContent=list.filter(t=>!t.done).length;
   });
 }
 
 function renderList(list, title) {
   const wrap = document.getElementById('content-wrap');
-  wrap.innerHTML = `<div style="padding:20px 24px;overflow-y:auto;flex:1"><div style="display:flex;flex-direction:column;gap:8px;max-width:680px" id="task-list"></div></div>`;
-  const tl = document.getElementById('task-list');
-  if (!list.length) { tl.innerHTML = `<div style="color:var(--text-muted);font-size:14px;padding:40px 0;text-align:center">No tasks here</div>`; return; }
-  list.forEach(t => tl.appendChild(buildCard(t)));
+  wrap.innerHTML=`<div style="padding:20px 24px;overflow-y:auto;flex:1"><div style="display:flex;flex-direction:column;gap:8px;max-width:680px" id="task-list"></div></div>`;
+  const tl=document.getElementById('task-list');
+  if (!list.length) { tl.innerHTML=`<div style="color:var(--text-muted);font-size:14px;padding:40px 0;text-align:center">No tasks here</div>`; return; }
+  list.forEach(t=>tl.appendChild(buildCard(t)));
 }
 
 function buildCard(t) {
-  const card = document.createElement('div');
-  card.className = 'task-card' + (t.done ? ' done' : '');
-  const dueClass = t.due && t.due.toLowerCase().includes('today') ? 'task-due overdue' : 'task-due';
-  const tagClass = t.isReminder ? 'task-tag tag-reminder' : 'task-tag tag-' + t.source;
-  const tagLabel = t.isReminder ? '⏰ Slack reminder' : {gmail:'Gmail',calendar:'Calendar',slack:'Slack',manual:'Manual'}[t.source]||t.source;
-  card.innerHTML = `
-    <div class="task-top">
-      <div class="task-check${t.done?' checked':''}" onclick="toggleDone(${t.id})"></div>
-      <div class="task-name${t.done?' task-done-name':''}">${esc(t.name)}</div>
-      <div class="task-actions"><button class="task-action-btn" onclick="deleteTask(${t.id})" title="Delete"><i class="ti ti-trash"></i></button></div>
-    </div>
-    <div class="task-meta">
-      <span class="${tagClass}">${tagLabel}</span>
-      ${t.due ? `<span class="${dueClass}"><i class="ti ti-calendar" style="font-size:11px"></i>${esc(t.due)}</span>` : ''}
-    </div>`;
+  const card=document.createElement('div'); card.className='task-card'+(t.done?' done':'');
+  const dueClass=t.due&&t.due.toLowerCase().includes('today')?'task-due overdue':'task-due';
+  const tagClass=t.isReminder?'task-tag tag-reminder':'task-tag tag-'+t.source;
+  const tagLabel=t.isReminder?'⏰ Slack reminder':{gmail:'Gmail',calendar:'Calendar',slack:'Slack',manual:'Manual'}[t.source]||t.source;
+  card.innerHTML=`<div class="task-top"><div class="task-check${t.done?' checked':''}" onclick="toggleDone(${t.id})"></div><div class="task-name${t.done?' task-done-name':''}">${esc(t.name)}</div><div class="task-actions"><button class="task-action-btn" onclick="deleteTask(${t.id})" title="Delete"><i class="ti ti-trash"></i></button></div></div><div class="task-meta"><span class="${tagClass}">${tagLabel}</span>${t.due?`<span class="${dueClass}"><i class="ti ti-calendar" style="font-size:11px"></i>${esc(t.due)}</span>`:''}</div>`;
   return card;
 }
 
-function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
-
 function toggleDone(id) {
-  const t = tasks.find(t=>t.id===id); if(!t) return;
-  t.done = !t.done; saveOverlay();
-  showToast(t.done ? 'Marked complete ✓' : 'Reopened');
+  const t=tasks.find(t=>t.id===id); if(!t) return;
+  t.done=!t.done; saveOverlay(); showToast(t.done?'Marked complete ✓':'Reopened'); renderTasks();
+}
+function deleteTask(id) { tasks=tasks.filter(t=>t.id!==id); saveDeletedTask(id); showToast('Task deleted'); renderTasks(); }
+
+// ── Work Tracker ──────────────────────────────────────────────────
+function renderTracker() {
+  const wrap = document.getElementById('content-wrap');
+  wrap.className = 'tracker-wrap';
+
+  let filtered = [...trackerItems];
+  if (tFilter.urgency) filtered = filtered.filter(ti => ti.urgency === tFilter.urgency);
+  if (tFilter.search) {
+    const s = tFilter.search.toLowerCase();
+    filtered = filtered.filter(ti => ti.name.toLowerCase().includes(s) || (ti.details||'').toLowerCase().includes(s) || (ti.notes||'').toLowerCase().includes(s));
+  }
+  filtered.sort((a,b) => {
+    let av, bv;
+    if (tSort.col==='urgency') { av=URG_ORDER[a.urgency??'']; bv=URG_ORDER[b.urgency??'']; }
+    else if (tSort.col==='due') { av=a.due||'zzz'; bv=b.due||'zzz'; }
+    else { av=(a[tSort.col]||'').toLowerCase(); bv=(b[tSort.col]||'').toLowerCase(); }
+    if (av<bv) return tSort.dir==='asc'?-1:1;
+    if (av>bv) return tSort.dir==='asc'?1:-1;
+    return 0;
+  });
+
+  const sortIcon = col => `<span class="sort-icon">${tSort.col===col?(tSort.dir==='asc'?'↑':'↓'):'↕'}</span>`;
+  const th = (col, label) => `<th class="${tSort.col===col?'sorted':''}" onclick="sortTracker('${col}')">${label}${sortIcon(col)}</th>`;
+
+  wrap.innerHTML = `
+    <div class="tracker-toolbar">
+      <div class="filter-group">
+        <span class="filter-label">Urgency</span>
+        <select class="filter-select" onchange="tFilter.urgency=this.value;renderTasks()">
+          <option value="">All</option>
+          <option value="urgent" ${tFilter.urgency==='urgent'?'selected':''}>Urgent</option>
+          <option value="high" ${tFilter.urgency==='high'?'selected':''}>High</option>
+          <option value="medium" ${tFilter.urgency==='medium'?'selected':''}>Medium</option>
+          <option value="low" ${tFilter.urgency==='low'?'selected':''}>Low</option>
+          <option value="na" ${tFilter.urgency==='na'?'selected':''}>N/A</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Search</span>
+        <input class="filter-input" type="text" placeholder="Filter by task or notes…" value="${esc(tFilter.search)}" oninput="tFilter.search=this.value;renderTasks()">
+      </div>
+      ${(tFilter.urgency||tFilter.search)?`<button class="filter-clear" onclick="tFilter={urgency:'',search:''};renderTasks()">Clear filters</button>`:''}
+      <span class="tracker-count">${filtered.length} item${filtered.length!==1?'s':''}</span>
+    </div>
+    <div class="tracker-scroll">
+      <table class="tracker-table">
+        <thead><tr>
+          ${th('name','Task')}
+          ${th('details','Details')}
+          ${th('urgency','Urgency')}
+          ${th('notes','Notes')}
+          ${th('due','Due date')}
+          <th></th>
+        </tr></thead>
+        <tbody id="tracker-tbody"></tbody>
+      </table>
+      ${filtered.length===0?`<div class="tracker-empty"><i class="ti ti-clipboard"></i>No items match your filters</div>`:''}
+    </div>`;
+
+  const tbody = document.getElementById('tracker-tbody');
+  if (tbody) filtered.forEach(ti => tbody.appendChild(buildTrackerRow(ti)));
+}
+
+function buildTrackerRow(ti) {
+  const tr = document.createElement('tr'); tr.className='tracker-row'; tr.dataset.tid=ti.tid;
+  const srcColor = {gmail:'var(--coral-400)',calendar:'var(--teal-400)',slack:'var(--purple-400)',manual:'var(--gray-400)'}[ti.source]||'var(--gray-400)';
+  const urgClass = URG_CLASS[ti.urgency||''] || 'urg-none';
+  const urgLabel = URG_LABEL[ti.urgency||''] || '';
+  const dueClass = ti.due&&ti.due.toLowerCase().includes('today')?'due-cell overdue':'due-cell';
+  tr.innerHTML = `
+    <td><div class="task-name-cell"><div class="row-source-dot" style="background:${srcColor}" title="${ti.source}"></div><div class="task-name-text editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'name',this.innerText)">${esc(ti.name)}</div></div></td>
+    <td class="details-cell"><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'details',this.innerText)" placeholder="Add details…">${esc(ti.details||'')}</div></td>
+    <td><div class="urgency-dropdown" onclick="cycleUrgency(${ti.tid})"><span class="urgency-pill ${urgClass}" style="cursor:pointer" title="Click to change">${urgLabel||'<span style=\'color:var(--text-muted);font-size:11px\'>Set urgency</span>'}</span></div></td>
+    <td class="notes-cell"><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'notes',this.innerText)">${esc(ti.notes||'')}</div></td>
+    <td class="${dueClass}"><div class="editable" contenteditable="true" onblur="updateTrackerField(${ti.tid},'due',this.innerText)">${esc(ti.due||'')}</div></td>
+    <td><div class="row-actions"><button class="row-action-btn" onclick="deleteTrackerItem(${ti.tid})" title="Delete"><i class="ti ti-trash"></i></button></div></td>`;
+  return tr;
+}
+
+function sortTracker(col) {
+  if (tSort.col===col) tSort.dir = tSort.dir==='asc'?'desc':'asc';
+  else { tSort.col=col; tSort.dir='asc'; }
   renderTasks();
 }
 
-function deleteTask(id) {
-  tasks = tasks.filter(t=>t.id!==id); saveDeletedTask(id);
-  showToast('Task deleted'); renderTasks();
+function cycleUrgency(tid) {
+  const ti = trackerItems.find(t=>t.tid===tid); if(!ti) return;
+  const cycle = ['urgent','high','medium','low','na',''];
+  const idx = cycle.indexOf(ti.urgency||'');
+  ti.urgency = cycle[(idx+1)%cycle.length];
+  saveTrackerItems(); renderTasks();
 }
 
-function updateCounts() {
-  const active = tasks.filter(t=>!t.done);
-  const today = tasks.filter(t=>t.due&&t.due.toLowerCase().includes('today')&&!t.done);
-  const tc = document.getElementById('total-count'); if(tc) tc.textContent = active.length;
-  const tod = document.getElementById('today-count'); if(tod) tod.textContent = today.length;
+function updateTrackerField(tid, field, value) {
+  const ti = trackerItems.find(t=>t.tid===tid); if(!ti) return;
+  ti[field] = value.trim(); saveTrackerItems();
 }
 
-// ─── Add task modal ───────────────────────────────────────────────
-function openAddModal() {
+function deleteTrackerItem(tid) {
+  trackerItems = trackerItems.filter(t=>t.tid!==tid); saveTrackerItems(); showToast('Item removed'); renderTasks();
+}
+
+// ── Tracker modal ─────────────────────────────────────────────────
+function openTrackerModal(item) {
   closeModal();
-  const overlay = document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
-  overlay.addEventListener('click', e => { if(e.target===overlay) closeModal(); });
-  const qLabels = [['1','🔥 Do now','Urgent + important'],['2','⭐ Schedule','Not urgent + important'],['3','🕐 Delegate','Urgent + not important'],['4','📦 Eliminate','Not urgent + not important']];
-  overlay.innerHTML = `<div class="modal">
-    <div class="modal-header"><div class="modal-title">New task</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
-    <div class="field"><label>Task name</label><input id="nt-name" type="text" placeholder="What needs to be done?" autocomplete="off"/></div>
-    <div class="field"><label>Priority</label>
-      <div class="q-grid">${qLabels.map(([v,l,s])=>`<div class="q-opt${selectedQ==v?' sel-'+v:''}" id="qopt-${v}" onclick="selQ(${v})"><div style="font-size:12px;font-weight:600">${l}</div><div style="font-size:10px;opacity:.75;margin-top:2px">${s}</div></div>`).join('')}</div>
+  const editing = item && item.tid;
+  const overlay=document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+  const urgOpts = ['','urgent','high','medium','low','na'].map(v=>`<option value="${v}" ${(item?.urgency||'')==v?'selected':''}>${v?URG_LABEL[v]:'— optional —'}</option>`).join('');
+  overlay.innerHTML=`<div class="modal">
+    <div class="modal-header"><div class="modal-title">${editing?'Edit item':'New tracker item'}</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+    <div class="field"><label>Task</label><input id="ti-name" type="text" placeholder="What needs to be done?" value="${esc(item?.name||'')}" autocomplete="off"/></div>
+    <div class="field"><label>Details</label><textarea id="ti-details" placeholder="Add context, background, or description…">${esc(item?.details||'')}</textarea></div>
+    <div class="field-row">
+      <div class="field"><label>Urgency <span class="field-optional">optional</span></label><select id="ti-urg">${urgOpts}</select></div>
+      <div class="field"><label>Due date <span class="field-optional">optional</span></label><input id="ti-due" type="text" placeholder="e.g. Today, Jun 20" value="${esc(item?.due||'')}"/></div>
     </div>
-    <div class="field"><label>Source</label><select id="nt-src"><option value="manual">Manual</option><option value="gmail">Gmail</option><option value="calendar">Calendar</option><option value="slack">Slack</option></select></div>
-    <div class="field"><label>Due date (optional)</label><input id="nt-due" type="text" placeholder="e.g. Today, Jun 20"/></div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="addTask()">Add task</button></div>
+    <div class="field"><label>Notes <span class="field-optional">optional</span></label><input id="ti-notes" type="text" placeholder="Blockers, context, who's involved…" value="${esc(item?.notes||'')}"/></div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveTrackerModal(${editing?ti.tid:'null'})">${editing?'Save changes':'Add item'}</button></div>
   </div>`;
   document.body.appendChild(overlay);
-  setTimeout(() => { const i=document.getElementById('nt-name'); if(i) i.focus(); }, 50);
+  setTimeout(()=>{ const i=document.getElementById('ti-name'); if(i) i.focus(); },50);
   document.addEventListener('keydown', handleModalKey);
 }
 
-function handleModalKey(e) { if(e.key==='Escape') closeModal(); if(e.key==='Enter'&&e.target.id==='nt-name') addTask(); }
-function closeModal() { const m=document.getElementById('modal-overlay'); if(m) m.remove(); document.removeEventListener('keydown',handleModalKey); }
-
-function selQ(n) {
-  selectedQ = n;
-  [1,2,3,4].forEach(i => { const el=document.getElementById('qopt-'+i); if(el) el.className='q-opt'+(i===n?' sel-'+n:''); });
+function saveTrackerModal(tid) {
+  const name=(document.getElementById('ti-name')||{}).value?.trim();
+  if (!name) { const i=document.getElementById('ti-name'); if(i){i.style.borderColor='var(--red-400)';i.focus();} return; }
+  const details=(document.getElementById('ti-details')||{}).value?.trim()||'';
+  const urgency=(document.getElementById('ti-urg')||{}).value||'';
+  const due=(document.getElementById('ti-due')||{}).value?.trim()||'';
+  const notes=(document.getElementById('ti-notes')||{}).value?.trim()||'';
+  if (tid) {
+    const ti=trackerItems.find(t=>t.tid===tid);
+    if(ti){ Object.assign(ti,{name,details,urgency,due,notes}); }
+  } else {
+    trackerItems.push({ tid:nextTid++, taskId:null, name, details, urgency, due, notes, source:'manual', autoImported:false });
+  }
+  saveTrackerItems(); closeModal(); showToast(tid?'Item updated ✓':'Item added ✓'); renderTasks();
 }
 
+// ── Matrix add modal ──────────────────────────────────────────────
+function openAddModal() {
+  closeModal();
+  const overlay=document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+  const qLabels=[['1','🔥 Do now','Urgent + important'],['2','⭐ Schedule','Not urgent + important'],['3','🕐 Delegate','Urgent + not important'],['4','📦 Eliminate','Not urgent + not important']];
+  overlay.innerHTML=`<div class="modal"><div class="modal-header"><div class="modal-title">New task</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div><div class="field"><label>Task name</label><input id="nt-name" type="text" placeholder="What needs to be done?" autocomplete="off"/></div><div class="field"><label>Priority</label><div class="q-grid">${qLabels.map(([v,l,s])=>`<div class="q-opt${selectedQ==v?' sel-'+v:''}" id="qopt-${v}" onclick="selQ(${v})"><div style="font-size:12px;font-weight:600">${l}</div><div style="font-size:10px;opacity:.75;margin-top:2px">${s}</div></div>`).join('')}</div></div><div class="field"><label>Source</label><select id="nt-src"><option value="manual">Manual</option><option value="gmail">Gmail</option><option value="calendar">Calendar</option><option value="slack">Slack</option></select></div><div class="field"><label>Due date <span class="field-optional">optional</span></label><input id="nt-due" type="text" placeholder="e.g. Today, Jun 20"/></div><div class="modal-footer"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="addTask()">Add task</button></div></div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>{ const i=document.getElementById('nt-name'); if(i) i.focus(); },50);
+  document.addEventListener('keydown', handleModalKey);
+}
+
+function handleModalKey(e) { if(e.key==='Escape') closeModal(); if(e.key==='Enter'&&(e.target.id==='nt-name'||e.target.id==='ti-name')) { e.preventDefault(); currentView==='tracker'?saveTrackerModal(null):addTask(); } }
+function closeModal() { const m=document.getElementById('modal-overlay'); if(m) m.remove(); document.removeEventListener('keydown',handleModalKey); }
+
+function selQ(n) { selectedQ=n; [1,2,3,4].forEach(i=>{ const el=document.getElementById('qopt-'+i); if(el) el.className='q-opt'+(i===n?' sel-'+n:''); }); }
+
 function addTask() {
-  const name = (document.getElementById('nt-name')||{}).value?.trim();
-  if(!name) { const i=document.getElementById('nt-name'); if(i){i.style.borderColor='var(--red-400)';i.focus();} return; }
-  const src = (document.getElementById('nt-src')||{}).value||'manual';
-  const due = (document.getElementById('nt-due')||{}).value?.trim()||null;
-  const task = { id:nextId++, name, q:selectedQ, source:src, due, done:false, isReminder:false };
+  const name=(document.getElementById('nt-name')||{}).value?.trim();
+  if(!name){ const i=document.getElementById('nt-name'); if(i){i.style.borderColor='var(--red-400)';i.focus();} return; }
+  const src=(document.getElementById('nt-src')||{}).value||'manual';
+  const due=(document.getElementById('nt-due')||{}).value?.trim()||null;
+  const task={ id:nextId++, name, q:selectedQ, source:src, due, done:false, isReminder:false };
   tasks.push(task); saveManualTask(task);
+  // also add to tracker
+  trackerItems.push({ tid:nextTid++, taskId:task.id, name, details:'', urgency:Q_TO_URG[selectedQ]||'', notes:'', due:due||'', source:src, autoImported:true });
+  saveTrackerItems();
   closeModal(); showToast('Task added ✓'); renderTasks();
 }
 
-// ─── Sync help ────────────────────────────────────────────────────
+// ── Sync help ─────────────────────────────────────────────────────
 function showSyncHelp() {
   closeModal();
-  const overlay = document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
-  overlay.addEventListener('click', e => { if(e.target===overlay) closeModal(); });
-  overlay.innerHTML = `<div class="modal">
-    <div class="modal-header"><div class="modal-title">How syncing works</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
-    <div style="font-size:13px;color:var(--text-secondary);line-height:1.7">
-      <p>Your tasks are kept up to date by <strong>Cowork</strong> running in the background on your computer.</p>
-      <br>
-      <p><strong>Sync schedule:</strong> Every 2 hours automatically, plus once when you open Claude Desktop each morning.</p>
-      <br>
-      <p><strong>What gets pulled in:</strong></p>
-      <ul style="padding-left:18px;margin-top:6px">
-        <li>Gmail — starred emails and action items</li>
-        <li>Google Calendar — upcoming meetings needing prep</li>
-        <li>Slack — Remind me later items, @mentions, bookmarks</li>
-      </ul>
-      <br>
-      <p><strong>To force a sync now:</strong> Open Cowork in Claude Desktop and say <em>"Run a focus-tasks sync now."</em></p>
-      <br>
-      <p><strong>Your changes are safe:</strong> Tasks you mark done, delete, or add manually are stored separately and never overwritten by syncs.</p>
-    </div>
-    <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal()">Got it</button></div>
-  </div>`;
+  const overlay=document.createElement('div'); overlay.className='modal-overlay'; overlay.id='modal-overlay';
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+  overlay.innerHTML=`<div class="modal"><div class="modal-header"><div class="modal-title">How syncing works</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7"><p>Tasks are kept up to date by <strong>Cowork</strong> running in the background on your computer.</p><br><p><strong>Sync schedule:</strong> 8am, 11am, 2pm, and 5pm daily while Claude Desktop is open.</p><br><p><strong>What gets pulled in:</strong></p><ul style="padding-left:18px;margin-top:6px"><li>Gmail — starred emails and action items</li><li>Google Calendar — upcoming meetings needing prep</li><li>Slack — Remind me later items, @mentions, bookmarks</li></ul><br><p><strong>To force a sync now:</strong> Open Cowork in Claude Desktop and say <em>"Run a focus-tasks sync now."</em></p><br><p><strong>Your changes are safe:</strong> Tasks you mark done, delete, or add manually are never overwritten by syncs.</p></div><div class="modal-footer"><button class="btn btn-primary" onclick="closeModal()">Got it</button></div></div>`;
   document.body.appendChild(overlay);
 }
 
-// ─── Utilities ────────────────────────────────────────────────────
+// ── Counts ────────────────────────────────────────────────────────
+function updateCounts() {
+  const active=tasks.filter(t=>!t.done);
+  const today=tasks.filter(t=>t.due&&t.due.toLowerCase().includes('today')&&!t.done);
+  const tc=document.getElementById('total-count'); if(tc) tc.textContent=active.length;
+  const tod=document.getElementById('today-count'); if(tod) tod.textContent=today.length;
+  const trc=document.getElementById('tracker-count'); if(trc) trc.textContent=trackerItems.length;
+}
+
+// ── View switching ────────────────────────────────────────────────
 function setView(view, el) {
-  currentView = view;
+  currentView=view;
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(el) el.classList.add('active');
-  const titles = { matrix:['Priority matrix','Organize by urgency and importance'], today:["Today's tasks",'Due or scheduled for today'], all:['All tasks','Every task across all quadrants'] };
-  const [t,d] = titles[view]||['Tasks',''];
-  document.getElementById('view-title').textContent = t;
-  document.getElementById('view-desc').textContent = d;
+  const titles={ matrix:['Priority matrix','Organize by urgency and importance'], today:["Today's tasks",'Due or scheduled for today'], tracker:['Work tracker','Track tasks with details, urgency and notes'], all:['All tasks','Every task across all quadrants'] };
+  const [t,d]=titles[view]||['Tasks',''];
+  document.getElementById('view-title').textContent=t;
+  document.getElementById('view-desc').textContent=d;
+  const wrap=document.getElementById('content-wrap');
+  wrap.className = view==='tracker' ? 'tracker-wrap' : 'matrix-wrap';
   renderTasks();
 }
 
+// ── Utils ─────────────────────────────────────────────────────────
+function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
 let toastTimer;
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2500); }
 
-// ─── Boot ─────────────────────────────────────────────────────────
 loadTasks();
 </script>
 </body>
