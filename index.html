@@ -230,6 +230,7 @@
   ::-webkit-scrollbar{width:4px;}
   ::-webkit-scrollbar-track{background:transparent;}
   ::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:4px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
   @media(max-width:768px){.sidebar{width:200px;}.today-strip{grid-template-columns:1fr 1fr;}.field-row{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -269,6 +270,7 @@
       </div>
       <div class="topbar-actions">
         <button class="btn" onclick="reloadTasks()"><i class="ti ti-refresh"></i> Refresh</button>
+        <button class="btn" id="sync-btn" onclick="manualSync()"><i class="ti ti-cloud-download"></i> Sync now</button>
         <button class="btn btn-primary" id="add-btn" onclick="openAddModal()"><i class="ti ti-plus"></i> Add task</button>
       </div>
     </div>
@@ -404,6 +406,40 @@ function updateSyncStatus(lastSynced, error) {
 }
 
 function reloadTasks(){showToast('Refreshing...');loadTasks();}
+
+function manualSync(){
+  const btn = document.getElementById('sync-btn');
+  if(btn){ btn.innerHTML='<i class="ti ti-loader" style="animation:spin 1s linear infinite"></i> Syncing…'; btn.disabled=true; }
+  // Open Cowork with the sync instruction pre-filled
+  const msg = encodeURIComponent('Run a focus-tasks sync now and push the updated tasks.json to GitHub.');
+  showToast('Opening Cowork to run sync…');
+  setTimeout(()=>{
+    if(btn){ btn.innerHTML='<i class="ti ti-cloud-download"></i> Sync now'; btn.disabled=false; }
+    // Show instructions modal since we can't directly trigger Cowork from the browser
+    closeModal();
+    const overlay=document.createElement('div');overlay.className='modal-overlay';overlay.id='modal-overlay';
+    overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal();});
+    overlay.innerHTML=`<div class="modal">
+      <div class="modal-header"><div class="modal-title">Run a manual sync</div><button class="close-btn" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.7">
+        <p>To trigger a sync outside your schedule:</p>
+        <br>
+        <p><strong>1.</strong> Switch to <strong>Cowork</strong> in Claude Desktop</p>
+        <p><strong>2.</strong> Open your <strong>focus-tasks</strong> project</p>
+        <p><strong>3.</strong> Type or paste this message:</p>
+        <div style="margin:10px 0;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);font-family:monospace;font-size:12px;color:var(--text-primary);cursor:pointer;user-select:all" onclick="navigator.clipboard.writeText('Run a focus-tasks sync now and push the updated tasks.json to GitHub.');showToast('Copied to clipboard ✓')">
+          Run a focus-tasks sync now and push the updated tasks.json to GitHub.
+        </div>
+        <p style="font-size:11px;color:var(--text-muted)">👆 Click the message above to copy it</p>
+        <br>
+        <p><strong>4.</strong> Come back here and hit <strong>Refresh</strong> once Cowork is done</p>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal()">Got it</button></div>
+    </div>`;
+    document.body.appendChild(overlay);
+  }, 800);
+}
+
 
 // ── Render dispatcher ─────────────────────────────────────────────
 function renderTasks() {
